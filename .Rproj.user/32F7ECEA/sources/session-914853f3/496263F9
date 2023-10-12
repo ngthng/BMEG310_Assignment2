@@ -3,7 +3,7 @@
     "path": "~/BMEG310_Assignment2/data.rmd",
     "project_path": "data.rmd",
     "type": "r_markdown",
-    "hash": "1607607203",
+    "hash": "2147910141",
     "contents": "",
     "dirty": false,
     "created": 1697130972068.0,
@@ -12,8 +12,8 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "23,0",
-        "scrollLine": "25",
+        "cursorPosition": "21,0",
+        "scrollLine": "7",
         "rmdVisualMode": "false",
         "rmdVisualModeLocation": "2:0",
         "rmdVisualWrapConfigured": "true",
@@ -23,11 +23,11 @@
         "last_setup_crc32": "914853f3bb338d19"
     },
     "folds": "",
-    "lastKnownWriteTime": 1697132667,
+    "lastKnownWriteTime": 1697132817,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1697132669378,
+    "last_content_update": 1697132817713,
     "read_only": false,
     "read_only_alternatives": []
 }
