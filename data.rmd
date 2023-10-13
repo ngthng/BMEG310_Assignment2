@@ -6,10 +6,6 @@ date: "2023-10-12"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## Loading the data
 
 ```{r}
@@ -38,5 +34,22 @@ num_pcs_for_90_percent_variance <- which(cumulative_variances >= 0.90)[1]
 
 cat("Number of PCs needed to preserve 90% of the variance: ", num_pcs_for_90_percent_variance, "\n")
 
+```
+```{r}
+library(ggplot2)
+
+pca_data <- as.data.frame(pca_result$x[, c(1, 2)])
+
+ggplot(pca_data, aes(x = PC1, y = PC2))+
+  geom_point(aes(color=ovarian.dataset$diagnosis))+
+  labs(title = "PCA: PC1 vs. PC2", x = "PC1", y = "PC2", color = "Diagnosis") 
+  
+```
+```{r}
+feature_data <- as.data.frame(ovarian.dataset[c("area", "concavity")])
+
+ggplot(feature_data, aes(x = area, y = concavity)) +
+  geom_point(aes(color=ovarian.dataset$diagnosis)) +
+  labs(title = "Scatter Plot: Area vs. Concavity", x = "Area", y = "Concavity", color = "Diagnosis")
 ```
 
