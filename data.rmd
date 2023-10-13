@@ -18,10 +18,8 @@ head(ovarian.dataset)
 
 data_subset <- ovarian.dataset[, c(3:ncol(ovarian.dataset))]
 
-# Perform PCA with centering and scaling
 pca_result <- prcomp(data_subset, center = TRUE, scale. = TRUE)
 
-# Summarize the PCA results
 summary(pca_result)
 
 ```
@@ -51,5 +49,10 @@ feature_data <- as.data.frame(ovarian.dataset[c("area", "concavity")])
 ggplot(feature_data, aes(x = area, y = concavity)) +
   geom_point(aes(color=ovarian.dataset$diagnosis)) +
   labs(title = "Scatter Plot: Area vs. Concavity", x = "Area", y = "Concavity", color = "Diagnosis")
+```
+```{r}
+pca_data <- pca_result$x
+
+boxplot(pca_data, main = "Distribution of PCs", xlab = "PC", ylab = "Score")
 ```
 
