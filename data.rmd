@@ -14,6 +14,10 @@ features <- c("perimeter", "area", "smoothness", "symmetry", "concavity", paste(
 names(ovarian.dataset) <- c("cell_id", "diagnosis", features) # paste0(features,"_mean"), paste0(features,"_se"), paste0(features,"_worst")
 head(ovarian.dataset)
 ```
+
+
+## Question 1
+
 ```{r}
 
 data_subset <- ovarian.dataset[, c(3:ncol(ovarian.dataset))]
@@ -43,6 +47,7 @@ ggplot(pca_data, aes(x = PC1, y = PC2))+
   labs(title = "PCA: PC1 vs. PC2", x = "PC1", y = "PC2", color = "Diagnosis") 
   
 ```
+
 ```{r}
 feature_data <- as.data.frame(ovarian.dataset[c("area", "concavity")])
 
@@ -56,3 +61,4 @@ pca_data <- pca_result$x
 boxplot(pca_data, main = "Distribution of PCs", xlab = "PC", ylab = "Score")
 ```
 
+## Question 2
