@@ -3,7 +3,7 @@
     "path": "~/BMEG310_Assignment2/data.rmd",
     "project_path": "data.rmd",
     "type": "r_markdown",
-    "hash": "2147910141",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1697130972068.0,
@@ -23,11 +23,11 @@
         "last_setup_crc32": "914853f3bb338d19"
     },
     "folds": "",
-    "lastKnownWriteTime": 1697132817,
+    "lastKnownWriteTime": 1697133166,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1697132817713,
+    "last_content_update": 1697133166,
     "read_only": false,
     "read_only_alternatives": []
 }
