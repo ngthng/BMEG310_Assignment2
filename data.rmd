@@ -77,3 +77,12 @@ ovarian.dataset.test <- ovarian.dataset[sample(nrow(ovarian.dataset))[(nrow(ovar
   
 ```
 
+
+Applying PCA on the train dataset
+
+```{r}
+pca_train_result = prcomp(ovarian.dataset.train[, c(3:ncol(ovarian.dataset))], center = TRUE, scale. = TRUE)
+
+summary(pca_train_result)
+```
+
