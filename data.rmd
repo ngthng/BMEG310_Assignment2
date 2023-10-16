@@ -81,8 +81,21 @@ ovarian.dataset.test <- ovarian.dataset[sample(nrow(ovarian.dataset))[(nrow(ovar
 Applying PCA on the train dataset
 
 ```{r}
-pca_train_result = prcomp(ovarian.dataset.train[, c(3:ncol(ovarian.dataset))], center = TRUE, scale. = TRUE)
+train_datasubset = ovarian.dataset.train[, c(2:ncol(ovarian.dataset))]
+
+for (i in 1:nrow(train_datasubset)){
+  train_datasubset$diagnosis[i] = ifelse(train_datasubset$diagnosis[i] == "M", 1, 0)
+  print(i)
+}
+
+pca_train_result = prcomp(train_datasubset, center = TRUE, scale. = TRUE)
 
 summary(pca_train_result)
+```
+
+Building logistical classifier:
+
+```{r}
+glm.fit = glm(diagnosis ~ perimeter + area + smoothness + symmertry + concavity, data = train_datasubset, type = "Response" )
 ```
 
