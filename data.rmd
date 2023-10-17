@@ -38,10 +38,9 @@ library(ggplot2)
 
 pca_data <- as.data.frame(pca_result$x[, c(1, 2)])
 
-ggplot(pca_data, aes(x = PC1, y = PC2))+
-  geom_point(aes(color=ovarian.dataset$diagnosis))+
-  labs(title = "PCA: PC1 vs. PC2", x = "PC1", y = "PC2", color = "Diagnosis") 
-  
+ggplot(pca_data, aes(x = PC1, y = PC2)) +
+  geom_point(aes(color = ovarian.dataset$diagnosis)) +
+  labs(title = "PCA: PC1 vs. PC2", x = "PC1", y = "PC2", color = "Diagnosis")  
 ```
 ```{r}
 feature_data <- as.data.frame(ovarian.dataset[c("area", "concavity")])
