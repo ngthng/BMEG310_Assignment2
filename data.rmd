@@ -21,17 +21,20 @@ head(ovarian.dataset)
 ## Question 1
 
 ```{r}
-
+#Q1.1
 data_subset <- ovarian.dataset[, c(3:ncol(ovarian.dataset))]
 
 pca_result <- prcomp(data_subset, center = TRUE, scale. = TRUE)
 
-summary(pca_result)
+pca_summary <- summary(pca_result)
+
+proportion_variance_PC1 <- pca_summary$importance[2, 1]
+
+cat("Number of variation in the data associated with PC1: ",proportion_variance_PC1, "\n" )
 
 ```
 ```{r}
-pca_summary <- summary(pca_result)
-
+#Q1.2
 cumulative_variances <- pca_summary$importance[3, ]
 
 num_pcs_for_90_percent_variance <- which(cumulative_variances >= 0.90)[1]
@@ -40,6 +43,7 @@ cat("Number of PCs needed to preserve 90% of the variance: ", num_pcs_for_90_per
 
 ```
 ```{r}
+#Q1.3
 library(ggplot2)
 
 pca_data <- as.data.frame(pca_result$x[, c(1, 2)])
@@ -50,6 +54,7 @@ ggplot(pca_data, aes(x = PC1, y = PC2)) +
 ```
 
 ```{r}
+#Q1.4
 feature_data <- as.data.frame(ovarian.dataset[c("area", "concavity")])
 
 ggplot(feature_data, aes(x = area, y = concavity)) +
