@@ -20,8 +20,8 @@ head(ovarian.dataset)
 
 ## Question 1
 
+# 1.1
 ```{r}
-#Q1.1
 data_subset <- ovarian.dataset[, c(3:ncol(ovarian.dataset))]
 
 pca_result <- prcomp(data_subset, center = TRUE, scale. = TRUE)
@@ -33,8 +33,8 @@ proportion_variance_PC1 <- pca_summary$importance[2, 1]
 cat("Number of variation in the data associated with PC1: ",proportion_variance_PC1, "\n" )
 
 ```
+# 1.2
 ```{r}
-#Q1.2
 cumulative_variances <- pca_summary$importance[3, ]
 
 num_pcs_for_90_percent_variance <- which(cumulative_variances >= 0.90)[1]
@@ -42,6 +42,7 @@ num_pcs_for_90_percent_variance <- which(cumulative_variances >= 0.90)[1]
 cat("Number of PCs needed to preserve 90% of the variance: ", num_pcs_for_90_percent_variance, "\n")
 
 ```
+# 1.3
 ```{r}
 #Q1.3
 library(ggplot2)
@@ -52,7 +53,7 @@ ggplot(pca_data, aes(x = PC1, y = PC2)) +
   geom_point(aes(color = ovarian.dataset$diagnosis)) +
   labs(title = "PCA: PC1 vs. PC2", x = "PC1", y = "PC2", color = "Diagnosis")  
 ```
-
+# 1.4
 ```{r}
 #Q1.4
 feature_data <- as.data.frame(ovarian.dataset[c("area", "concavity")])
@@ -61,7 +62,12 @@ ggplot(feature_data, aes(x = area, y = concavity)) +
   geom_point(aes(color=ovarian.dataset$diagnosis)) +
   labs(title = "Scatter Plot: Area vs. Concavity", x = "Area", y = "Concavity", color = "Diagnosis")
 ```
-# Q1.6 bonus
+# 1.5
+```{r}
+
+```
+
+# 1.6 bonus
 
 ```{r}
 pca_data <- pca_result$x
