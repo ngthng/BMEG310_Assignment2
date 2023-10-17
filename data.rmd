@@ -11,9 +11,15 @@ output: html_document
 ```{r}
 ovarian.dataset <- read.delim("ovarian.data", sep=",", header = FALSE)
 features <- c("perimeter", "area", "smoothness", "symmetry", "concavity", paste("protein", seq(1, 25), sep=""))
+
 names(ovarian.dataset) <- c("cell_id", "diagnosis", features) # paste0(features,"_mean"), paste0(features,"_se"), paste0(features,"_worst")
+
 head(ovarian.dataset)
 ```
+
+
+## Question 1
+
 ```{r}
 
 data_subset <- ovarian.dataset[, c(3:ncol(ovarian.dataset))]
@@ -42,6 +48,7 @@ ggplot(pca_data, aes(x = PC1, y = PC2)) +
   geom_point(aes(color = ovarian.dataset$diagnosis)) +
   labs(title = "PCA: PC1 vs. PC2", x = "PC1", y = "PC2", color = "Diagnosis")  
 ```
+
 ```{r}
 feature_data <- as.data.frame(ovarian.dataset[c("area", "concavity")])
 
@@ -49,9 +56,70 @@ ggplot(feature_data, aes(x = area, y = concavity)) +
   geom_point(aes(color=ovarian.dataset$diagnosis)) +
   labs(title = "Scatter Plot: Area vs. Concavity", x = "Area", y = "Concavity", color = "Diagnosis")
 ```
+# Q1.6 bonus
+
 ```{r}
 pca_data <- pca_result$x
 
 boxplot(pca_data, main = "Distribution of PCs", xlab = "PC", ylab = "Score")
+```
+
+## Question 2
+
+## Question 3
+
+Dividing the data into training and testing data
+
+```{r}
+ovarian.dataset.train <- ovarian.dataset[sample(nrow(ovarian.dataset))[1:(nrow(ovarian.dataset)/2)],]
+ovarian.dataset.test <- ovarian.dataset[sample(nrow(ovarian.dataset))[(nrow(ovarian.dataset)/2):(nrow(ovarian.dataset))],]
+  
+```
+
+
+Converting the labels into 1 and 0
+
+```{r}
+train_data = ovarian.dataset.train
+
+for (i in 1:nrow(train_data)){
+  train_data$diagnosis[i] = ifelse(train_data$diagnosis[i] == "M", 1, 0)
+}
+train_data[,2] = as.integer(train_data[,2])
+
+test_data = ovarian.dataset.test
+for (i in 1:nrow(test_data)){
+  test_data$diagnosis[i] = ifelse(test_data$diagnosis[i] == "M", 1, 0)
+}
+test_data[,2] = as.integer(test_data[,2])
+
+
+```
+
+Applying PCA on the train dataset
+
+``` {r}
+train_datasubset = train_data[, c(3:ncol(train_data))]
+
+pca_train_result = prcomp(train_datasubset, center = TRUE, scale. = TRUE)
+
+summary(pca_train_result)
+```
+
+Building logistical classifier:
+
+```{r}
+glm.fit = glm(diagnosis ~ perimeter + area + smoothness + symmetry + concavity, data = train_data, family = binomial )
+```
+
+Fitting with the test data
+
+```{r}
+glm.probs = predict(glm.fit, test_data[, c(3:ncol(train_data))], type = "response")
+glm.probs[1:5]
+
+glm.pred = ifelse(glm.probs > 0.5, 1, 0)
+attach(test_data)
+table(glm.pred, diagnosis)
 ```
 

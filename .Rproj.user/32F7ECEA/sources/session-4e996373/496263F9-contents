@@ -1,0 +1,64 @@
+
+---
+title: "assignment1"
+author: "Theo-60985751"
+date: "2023-10-12"
+output: html_document
+---
+
+## Loading the data
+
+```{r}
+ovarian.dataset <- read.delim("ovarian.data", sep=",", header = FALSE)
+features <- c("perimeter", "area", "smoothness", "symmetry", "concavity", paste("protein", seq(1, 25), sep=""))
+names(ovarian.dataset) <- c("cell_id", "diagnosis", features) # paste0(features,"_mean"), paste0(features,"_se"), paste0(features,"_worst")
+head(ovarian.dataset)
+```
+
+
+## Question 1
+
+```{r}
+
+data_subset <- ovarian.dataset[, c(3:ncol(ovarian.dataset))]
+
+pca_result <- prcomp(data_subset, center = TRUE, scale. = TRUE)
+
+summary(pca_result)
+
+```
+```{r}
+pca_summary <- summary(pca_result)
+
+cumulative_variances <- pca_summary$importance[3, ]
+
+num_pcs_for_90_percent_variance <- which(cumulative_variances >= 0.90)[1]
+
+cat("Number of PCs needed to preserve 90% of the variance: ", num_pcs_for_90_percent_variance, "\n")
+
+```
+```{r}
+library(ggplot2)
+
+pca_data <- as.data.frame(pca_result$x[, c(1, 2)])
+
+ggplot(pca_data, aes(x = PC1, y = PC2))+
+  geom_point(aes(color=ovarian.dataset$diagnosis))+
+  labs(title = "PCA: PC1 vs. PC2", x = "PC1", y = "PC2", color = "Diagnosis") 
+  
+```
+
+```{r}
+feature_data <- as.data.frame(ovarian.dataset[c("area", "concavity")])
+
+ggplot(feature_data, aes(x = area, y = concavity)) +
+  geom_point(aes(color=ovarian.dataset$diagnosis)) +
+  labs(title = "Scatter Plot: Area vs. Concavity", x = "Area", y = "Concavity", color = "Diagnosis")
+```
+```{r}
+pca_data <- pca_result$x
+
+boxplot(pca_data, main = "Distribution of PCs", xlab = "PC", ylab = "Score")
+```
+
+## Question 2

@@ -1,0 +1,5 @@
+"0","feature_data <- as.data.frame(ovarian.dataset[c(""area"", ""concavity"")])"
+"0",""
+"0","ggplot(feature_data, aes(x = area, y = concavity)) +"
+"0","  geom_point(aes(color=ovarian.dataset$diagnosis)) +"
+"0","  labs(title = ""Scatter Plot: Area vs. Concavity"", x = ""Area"", y = ""Concavity"", color = ""Diagnosis"")"
