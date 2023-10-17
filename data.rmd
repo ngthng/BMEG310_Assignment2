@@ -91,40 +91,43 @@ for (i in 1:nrow(train_data)){
   train_data$diagnosis[i] = ifelse(train_data$diagnosis[i] == "M", 1, 0)
 }
 train_data[,2] = as.integer(train_data[,2])
+train_datasubset = train_data[,c(2:ncol(train_data))]
 
 test_data = ovarian.dataset.test
 for (i in 1:nrow(test_data)){
   test_data$diagnosis[i] = ifelse(test_data$diagnosis[i] == "M", 1, 0)
 }
 test_data[,2] = as.integer(test_data[,2])
-
+test_datasubset = test_data[, c(2:ncol(test_data))]
 
 ```
 
-Applying PCA on the train dataset
-
-``` {r}
-train_datasubset = train_data[, c(3:ncol(train_data))]
-
-pca_train_result = prcomp(train_datasubset, center = TRUE, scale. = TRUE)
-
-summary(pca_train_result)
-```
-
+# 3.1
 Building logistical classifier:
 
 ```{r}
-glm.fit = glm(diagnosis ~ perimeter + area + smoothness + symmetry + concavity, data = train_data, family = binomial )
+
+glm.fit = glm(diagnosis ~ perimeter + area + smoothness + symmetry + concavity + protein1 + protein10 + protein11 + protein12 + protein13 + protein14 + protein15 + protein16 + protein17 + protein18 + protein19 + protein2 + protein20 + protein21 + protein22 + protein23 + protein24 + protein25 + protein3 + protein4 + protein5 + protein6 + protein7 + protein8 + protein9 , data = train_datasubset, family = binomial )
 ```
 
 Fitting with the test data
 
 ```{r}
-glm.probs = predict(glm.fit, test_data[, c(3:ncol(train_data))], type = "response")
+glm.probs = predict(glm.fit, test_datasubset, type = "response")
 glm.probs[1:5]
 
 glm.pred = ifelse(glm.probs > 0.5, 1, 0)
-attach(test_data)
+
+attach(test_datasubset)
 table(glm.pred, diagnosis)
+
+mean(glm.pred == diagnosis)
 ```
 
+Applying PCA on the train dataset
+
+``` {r}
+pca_train_result = prcomp(train_datasubset, center = TRUE, scale. = TRUE)
+
+summary(pca_train_result)
+```
