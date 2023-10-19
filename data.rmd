@@ -124,7 +124,7 @@ Applying PCA on the train dataset
 
 ``` {r}
 pca_train_result = prcomp(train_datasubset, center = TRUE, scale. = TRUE)
-
+  
 summary(pca_train_result)
 ```
 
