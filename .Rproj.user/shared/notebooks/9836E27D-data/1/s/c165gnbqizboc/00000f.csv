@@ -1,4 +1,0 @@
-"0","ovarian.dataset <- read.delim(""ovarian.data"", sep="","", header = FALSE)"
-"0","features <- c(""perimeter"", ""area"", ""smoothness"", ""symmetry"", ""concavity"", paste(""protein"", seq(1, 25), sep=""""))"
-"0","names(ovarian.dataset) <- c(""cell_id"", ""diagnosis"", features) # paste0(features,""_mean""), paste0(features,""_se""), paste0(features,""_worst"")"
-"0","head(ovarian.dataset)"

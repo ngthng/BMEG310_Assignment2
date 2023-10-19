@@ -1,3 +1,0 @@
-"0","pca_data <- pca_result$x"
-"0",""
-"0","boxplot(pca_data, main = ""Distribution of PCs"", xlab = ""PC"", ylab = ""Score"")"

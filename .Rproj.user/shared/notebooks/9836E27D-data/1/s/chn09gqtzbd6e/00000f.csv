@@ -1,7 +1,0 @@
-"0","library(ggplot2)"
-"2","Warning: package ‘ggplot2’ was built under R version 4.2.3"
-"0","pca_data <- as.data.frame(pca_result$x[, c(1, 2)])"
-"0",""
-"0","ggplot(pca_data, aes(x = PC1, y = PC2))+"
-"0","  geom_point(aes(color=ovarian.dataset$diagnosis))+"
-"0","  labs(title = ""PCA: PC1 vs. PC2"", x = ""PC1"", y = ""PC2"", color = ""Diagnosis"") "

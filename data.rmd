@@ -44,7 +44,6 @@ cat("Number of PCs needed to preserve 90% of the variance: ", num_pcs_for_90_per
 ```
 # 1.3
 ```{r}
-#Q1.3
 library(ggplot2)
 
 pca_data <- as.data.frame(pca_result$x[, c(1, 2)])
@@ -55,17 +54,13 @@ ggplot(pca_data, aes(x = PC1, y = PC2)) +
 ```
 # 1.4
 ```{r}
-#Q1.4
-feature_data <- as.data.frame(ovarian.dataset[c("area", "concavity")])
-
-ggplot(feature_data, aes(x = area, y = concavity)) +
-  geom_point(aes(color=ovarian.dataset$diagnosis)) +
-  labs(title = "Scatter Plot: Area vs. Concavity", x = "Area", y = "Concavity", color = "Diagnosis")
+ggplot(ovarian.dataset, aes(x = area, y = concavity, color = diagnosis)) +
+  geom_point() +
+  labs(title = "Scatter Plot of Area vs. Concavity", x = "Area", y = "Concavity")
 ```
 # 1.5
-```{r}
 
-```
+The PCA plot provides a visualization of how well the first two PCs separate the classes in a lower-dimensional space. The "Area" vs. "Concavity" plot shows the direct relationship between these two specific features. It does not perform dimensionality reduction or create a new feature space. The PCA plot gives a better separation between the classes because it shows less overlap between the class data points, meaning that the data points from one class are more clustered together, and there is less mixing of data points from different classes. This clearer separation makes it easier to visually distinguish between classes.  
 
 # 1.6 bonus
 
@@ -76,6 +71,24 @@ boxplot(pca_data, main = "Distribution of PCs", xlab = "PC", ylab = "Score")
 ```
 
 ## Question 2
+
+# 2.1
+```{r}
+scaled_data <- scale(data_subset)
+kmeans_result <- kmeans(scaled_data, centers = 2)
+
+kmeans_clusters <- kmeans_result$cluster
+
+predicted_diagnosis <- ifelse(cluster_assignments == 1, "B", "M")
+
+true_labels <- ovarian.dataset$diagnosis
+
+confusion_matrix <- table(Predicted = predicted_diagnosis, True = true_labels)
+
+
+
+```
+
 
 ## Question 3
 
