@@ -79,13 +79,77 @@ kmeans_result <- kmeans(scaled_data, centers = 2)
 
 kmeans_clusters <- kmeans_result$cluster
 
-predicted_diagnosis <- ifelse(cluster_assignments == 1, "B", "M")
+predicted_labels <- ifelse(kmeans_clusters == 1, "B", "M")
 
 true_labels <- ovarian.dataset$diagnosis
 
-confusion_matrix <- table(Predicted = predicted_diagnosis, True = true_labels)
+confusion_matrix <- table(Predicted = predicted_labels, True = true_labels)
+
+confusion_matrix
+
+TP <- sum(predicted_labels == "M" & true_labels == "M")
+TN <- sum(predicted_labels == "B" & true_labels == "B")
+FP <- sum(predicted_labels == "M" & true_labels == "B")
+FN <- sum(predicted_labels == "B" & true_labels == "M")
 
 
+accuracy <- (TP + TN) / (TP + TN + FP + FN)
+precision <- TP / (TP + FP)
+recall <- TP / (TP + FN)
+
+cat("Accuracy: ", accuracy, "\n")
+cat("Precision: ", precision, "\n")
+cat("Recall: ", recall, "\n")
+```
+# 2.2
+```{r}
+num_runs <- 10
+
+accuracy_results <- numeric(num_runs)
+
+for (i in 1:num_runs) {
+  
+  kmeans_result <- kmeans(scaled_data, centers = 2)
+  
+  kmeans_clusters <- kmeans_result$cluster
+  
+  predicted_labels <- ifelse(kmeans_clusters == 1, "B", "M")
+  
+  TP <- sum(predicted_labels == "M" & true_labels == "M")
+  TN <- sum(predicted_labels == "B" & true_labels == "B")
+  FP <- sum(predicted_labels == "M" & true_labels == "B")
+  FN <- sum(predicted_labels == "B" & true_labels == "M")
+  
+  accuracy <- (TP + TN) / (TP + TN + FP + FN)
+  
+  accuracy_results[i] <- accuracy
+}
+
+mean_accuracy <- mean(accuracy_results)
+
+cat("Mean Accuracy Across 10 Runs: ", mean_accuracy, "\n")
+
+```
+# 2.3
+```{r}
+top_5_pcs <- pca_result$x[, 1:5]
+
+kmeans_result <- kmeans(top_5_pcs, centers = 2)
+
+cluster_assignments <- kmeans_result$cluster
+
+predicted_labels <- ifelse(cluster_assignments == 1, "B", "M")
+
+true_labels <- ovarian.dataset$diagnosis
+
+TP <- sum(predicted_labels == "M" & true_labels == "M")
+TN <- sum(predicted_labels == "B" & true_labels == "B")
+FP <- sum(predicted_labels == "M" & true_labels == "B")
+FN <- sum(predicted_labels == "B" & true_labels == "M")
+
+accuracy <- (TP + TN) / (TP + TN + FP + FN)
+
+cat("Accuracy with the Top 5 PCs: ", accuracy, "\n")
 
 ```
 
