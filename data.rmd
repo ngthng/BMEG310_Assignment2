@@ -1,6 +1,6 @@
 
 ---
-title: "assignment1"
+title: "assignment2"
 author: "Theo-60985751"
 date: "2023-10-12"
 output: html_document
@@ -235,12 +235,7 @@ cat("Precision for test set: ", precision, "\n")
 cat("Recall for test set: ", recall, "\n")
 
 ```
-#what is this?
-Classification rate (accuracy) = 93.61%
-Precision: 120/(120 + 11) = 91.6%
-Recall: 120/(120 + 9) = 93.02%
 
-Fitting with the train data
 ```{r}
 glm.probs <-  predict(glm.fit, train_datasubset, type = "response")
 glm.pred <-  ifelse(glm.probs > 0.5, 1, 0)
@@ -347,5 +342,21 @@ cat("Precision: ", precision_top5_pcs, "\n")
 cat("Recall: ", recall_top5_pcs, "\n")
 
 
+```
+# Q3.3 
+
+The result of applying the regression test on the PCA data has higher accuracy, precision, and recall than that of applying the regression test on the test data only. This may because PCA makes the difference between each characteristic more clear in each of their own dimension so that the regression model can fit the line in each of those dimensions more accurately.
+
+# Q3.4 
+
+The result of the general linear regression also has higher accuracy, precision, and recall in both applying the data directly and applying the methods to the PCs. 
+
+# Q3.5 (working on this)
+
+```{r}
+pred.prob <- predict(glm.fit, ovarian.dataset, type="response")
+predict <- prediction(pred.prob, ovarian.dataset$diagnosis, label.ordering=c("B","M"))
+perform <- performance(predict,"tpr","fpr")
+plot(perform,colorize=TRUE)
 ```
 
