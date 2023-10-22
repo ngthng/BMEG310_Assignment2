@@ -96,8 +96,6 @@ TN <- sum(predicted_labels == "B" & true_labels == "B")
 FP <- sum(predicted_labels == "M" & true_labels == "B")
 FN <- sum(predicted_labels == "B" & true_labels == "M")
 
-
-<<<<<<< HEAD
 accuracy <- (TP + TN) / (TP + TN + FP + FN)
 precision <- TP / (TP + FP)
 recall <- TP / (TP + FN)
@@ -135,31 +133,40 @@ mean_accuracy <- mean(accuracy_results)
 cat("Mean Accuracy Across 10 Runs: ", mean_accuracy, "\n")
 
 ```
+The mean accuracy is different from one run to another due to the sensitivity of kmeans clustering to the initial placement of cluster centroids. In kmeans clustering, cluster centroids are initialized randomly which means that the initial positions of centroids may vary in different runs of the algorithm. These initial positions have a significant impact on how data points are assigned to clusters. Therefore, the assignment of data points to the "B" or "M" cluster can vary between runs (see Q2.1: predicted "B" and "M" are changing/alternating each run)
+
 # 2.3
 ```{r}
-top_5_pcs <- pca_result$x[, 1:5]
-
-kmeans_result <- kmeans(top_5_pcs, centers = 2)
-
-cluster_assignments <- kmeans_result$cluster
-
-predicted_labels <- ifelse(cluster_assignments == 1, "B", "M")
+num_runs <- 10
 
 true_labels <- ovarian.dataset$diagnosis
 
-TP <- sum(predicted_labels == "M" & true_labels == "M")
-TN <- sum(predicted_labels == "B" & true_labels == "B")
-FP <- sum(predicted_labels == "M" & true_labels == "B")
-FN <- sum(predicted_labels == "B" & true_labels == "M")
+top_5_pcs <- pca_result$x[, 1:5]
 
-accuracy <- (TP + TN) / (TP + TN + FP + FN)
+
+for (i in 1:num_runs){
+  
+  kmeans_result <- kmeans(top_5_pcs, centers = 2)
+
+  cluster_assignments <- kmeans_result$cluster
+
+  predicted_labels <- ifelse(cluster_assignments == 1, "B", "M")
+  
+  TP <- sum(predicted_labels == "M" & true_labels == "M")
+  TN <- sum(predicted_labels == "B" & true_labels == "B")
+  FP <- sum(predicted_labels == "M" & true_labels == "B")
+  FN <- sum(predicted_labels == "B" & true_labels == "M")
+  
+  accuracy <- (TP + TN) / (TP + TN + FP + FN)
+  
+  accuracy_results[i] <- accuracy
+}
 
 cat("Accuracy with the Top 5 PCs: ", accuracy, "\n")
 
-=======
->>>>>>> fe7f42c71367715b400513524260325ef28e9437
 ```
-
+# 2.4
+The mean accuracy in Q2.3 (PCA with top 5 PCs) is slightly better than that in Q2.2 (original features). Why?????
 
 ## Question 3
 
@@ -175,20 +182,20 @@ ovarian.dataset.test <- ovarian.dataset[sample(nrow(ovarian.dataset))[(nrow(ovar
 Converting the labels into 1 and 0
 
 ```{r}
-train_data = ovarian.dataset.train
+train_data <- ovarian.dataset.train
 
 for (i in 1:nrow(train_data)){
-  train_data$diagnosis[i] = ifelse(train_data$diagnosis[i] == "M", 1, 0)
+  train_data$diagnosis[i] <-  ifelse(train_data$diagnosis[i] == "M", 1, 0)
 }
-train_data[,2] = as.integer(train_data[,2])
-train_datasubset = train_data[,c(2:ncol(train_data))]
+train_data[,2] <-  as.integer(train_data[,2])
+train_datasubset <-  train_data[,c(2:ncol(train_data))]
 
 test_data = ovarian.dataset.test
 for (i in 1:nrow(test_data)){
-  test_data$diagnosis[i] = ifelse(test_data$diagnosis[i] == "M", 1, 0)
+  test_data$diagnosis[i] <- ifelse(test_data$diagnosis[i] == "M", 1, 0)
 }
-test_data[,2] = as.integer(test_data[,2])
-test_datasubset = test_data[, c(2:ncol(test_data))]
+test_data[,2] <-  as.integer(test_data[,2])
+test_datasubset <-  test_data[, c(2:ncol(test_data))]
 
 ```
 
@@ -197,44 +204,148 @@ Building logistical classifier:
 
 ```{r}
 
-glm.fit = glm(diagnosis ~ perimeter + area + smoothness + symmetry + concavity + protein1 + protein10 + protein11 + protein12 + protein13 + protein14 + protein15 + protein16 + protein17 + protein18 + protein19 + protein2 + protein20 + protein21 + protein22 + protein23 + protein24 + protein25 + protein3 + protein4 + protein5 + protein6 + protein7 + protein8 + protein9 , data = train_datasubset, family = binomial )
+glm.fit <-  glm(diagnosis ~ perimeter + area + smoothness + symmetry + concavity + protein1 + protein10 + protein11 + protein12 + protein13 + protein14 + protein15 + protein16 + protein17 + protein18 + protein19 + protein2 + protein20 + protein21 + protein22 + protein23 + protein24 + protein25 + protein3 + protein4 + protein5 + protein6 + protein7 + protein8 + protein9 , data = train_datasubset, family = binomial )
 ```
 
 Fitting with the test data
 
 ```{r}
-glm.probs = predict(glm.fit, test_datasubset, type = "response")
+glm.probs <-  predict(glm.fit, test_datasubset, type = "response")
 glm.probs[1:5]
 
-glm.pred = ifelse(glm.probs > 0.5, 1, 0)
+glm.pred <-  ifelse(glm.probs > 0.5, 1, 0)
 
-attach(test_datasubset)
-table(glm.pred, diagnosis)
+conf_matrix <- table(glm.pred, test_data$diagnosis)
 
-mean(glm.pred == diagnosis)
+conf_matrix
+
+TP <- conf_matrix[2, 2]
+TN <- conf_matrix[1, 1]
+FP <- conf_matrix[2, 1]
+FN <- conf_matrix[1, 2]
+
+accuracy <- (TP + TN) / sum(conf_matrix)
+
+precision <- TP / (TP + FP)
+
+recall <- TP / (TP + FN)
+
+cat("Accuracy for test set: ", accuracy, "\n")
+cat("Precision for test set: ", precision, "\n")
+cat("Recall for test set: ", recall, "\n")
 
 ```
+#what is this?
 Classification rate (accuracy) = 93.61%
 Precision: 120/(120 + 11) = 91.6%
 Recall: 120/(120 + 9) = 93.02%
+
+Fitting with the train data
+```{r}
+glm.probs <-  predict(glm.fit, train_datasubset, type = "response")
+glm.pred <-  ifelse(glm.probs > 0.5, 1, 0)
+
+conf_matrix <- table(glm.pred, train_data$diagnosis)
+
+conf_matrix
+
+TP <- conf_matrix[2, 2]
+TN <- conf_matrix[1, 1]
+FP <- conf_matrix[2, 1]
+FN <- conf_matrix[1, 2]
+
+accuracy <- (TP + TN) / sum(conf_matrix)
+
+precision <- TP / (TP + FP)
+
+recall <- TP / (TP + FN)
+
+cat("Accuracy for train set: ", accuracy, "\n")
+cat("Precision for train set: ", precision, "\n")
+cat("Recall for train set: ", recall, "\n")
+```
+The classifier performs better on the training set with a high accuracy (1) because the model was trained on this data, and it "memorizes" the training samples. On the other hand, the accuracy of the classifier on the test set is lower (0.98) because the test set contains data that the model has not seen during training, and the model may not perform as well on unseen data. Precision and recall on the training set are also high, which means that the model is good at classifying the training samples. 
 
 # Q3.2
 
 Applying PCA on the train data set
 
 ``` {r}
-pca_train_result = prcomp(train_datasubset, center = TRUE, scale. = TRUE)
+pca_train_result <-  prcomp(train_datasubset, center = TRUE, scale. = TRUE)
 
 summary(pca_train_result)
 
-top5PC_data_train = as.data.frame(pca_train_result$x[, c(1:5)])
+top5PC_data_train <-  as.data.frame(pca_train_result$x[, 1:5])
+
+top5PC_data_train$diagnosis <- train_datasubset$diagnosis
+
+top5PC_data_train
 ```
 
-Building logistical classifier and fit with the top 5 PCs:
+Building logistical classifier and fit with the top 5 PCs (train data set):
 ```{r}
-glmTop5.fit = glm(PC1 ~ PC2 + PC3 + PC4 + PC5, data = top5PC_data_train,family = binomial)
+glmTop5.fit <-  glm(diagnosis ~ PC1 + PC2 + PC3 + PC4 + PC5, data = top5PC_data_train, family = binomial)
 
-glmTop5.probs = predict(glmTop5.fit, test_datasubset, type = "response")
+glmTop5.probs <-  predict(glmTop5.fit, top5PC_data_train, type = "response")
+
+
+glmTop5.pred <-  ifelse(glmTop5.probs > 0.5, 1, 0)
+
+conf_matrix_top5_pcs <- table(glmTop5.pred, top5PC_data_train$diagnosis)
+
+conf_matrix_top5_pcs
+
+TP_top5_pcs <- conf_matrix_top5_pcs[2, 2]
+TN_top5_pcs <- conf_matrix_top5_pcs[1, 1]
+FP_top5_pcs <- conf_matrix_top5_pcs[2, 1]
+FN_top5_pcs <- conf_matrix_top5_pcs[1, 2]
+
+accuracy_top5_pcs <- (TP_top5_pcs + TN_top5_pcs) / sum(conf_matrix_top5_pcs)
+
+precision_top5_pcs <- TP_top5_pcs / (TP_top5_pcs + FP_top5_pcs)
+
+recall_top5_pcs <- TP_top5_pcs / (TP_top5_pcs + FN_top5_pcs)
+
+cat("Performance on Train Set with Top 5 PCs:\n")
+cat("Accuracy: ", accuracy_top5_pcs, "\n")
+cat("Precision: ", precision_top5_pcs, "\n")
+cat("Recall: ", recall_top5_pcs, "\n")
+
+```
+Apply the same PCA to test data
+```{r}
+pca_test_result <- predict(pca_train_result, newdata = test_datasubset)
+
+top5PC_data_test <- as.data.frame(pca_test_result[, 1:5])
+
+top5PC_data_test$diagnosis <- test_datasubset$diagnosis
+
+glmTop5_test_fit <- glm(diagnosis ~ PC1 + PC2 + PC3 + PC4 + PC5, data = top5PC_data_test, family = binomial)
+
+glmTop5_test_probs <- predict(glmTop5_test_fit, top5PC_data_test, type = "response")
+
+glmTop5_test_pred <- ifelse(glmTop5_test_probs > 0.5, 1, 0)
+
+conf_matrix_top5_pcs <- table(glmTop5.pred, test_datasubset$diagnosis)
+
+conf_matrix_top5_pcs
+
+TP_top5_pcs <- conf_matrix_top5_pcs[2, 2]
+TN_top5_pcs <- conf_matrix_top5_pcs[1, 1]
+FP_top5_pcs <- conf_matrix_top5_pcs[2, 1]
+FN_top5_pcs <- conf_matrix_top5_pcs[1, 2]
+
+accuracy_top5_pcs <- (TP_top5_pcs + TN_top5_pcs) / sum(conf_matrix_top5_pcs)
+
+precision_top5_pcs <- TP_top5_pcs / (TP_top5_pcs + FP_top5_pcs)
+
+recall_top5_pcs <- TP_top5_pcs / (TP_top5_pcs + FN_top5_pcs)
+
+cat("Performance on Test Set with Top 5 PCs:\n")
+cat("Accuracy: ", accuracy_top5_pcs, "\n")
+cat("Precision: ", precision_top5_pcs, "\n")
+cat("Recall: ", recall_top5_pcs, "\n")
+
 
 ```
 
