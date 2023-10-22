@@ -326,7 +326,7 @@ glmTop5_test_probs <- predict(glmTop5_test_fit, top5PC_data_test, type = "respon
 
 glmTop5_test_pred <- ifelse(glmTop5_test_probs > 0.5, 1, 0)
 
-conf_matrix_top5_pcs <- table(glmTop5.pred, test_datasubset$diagnosis)
+conf_matrix_top5_pcs <- table(glmTop5_test_pred, test_datasubset$diagnosis)
 
 conf_matrix_top5_pcs
 
