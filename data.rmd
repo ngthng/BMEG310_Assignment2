@@ -348,11 +348,13 @@ cat("Recall: ", recall_top5_pcs, "\n")
 # Q3.3 
 
 The result of applying the regression test on the PCA data has higher accuracy, precision, and recall than that of applying the regression test on the test data only. This may because PCA makes the difference between each characteristic more clear in each of their own dimension so that the regression model can fit the line in each of those dimensions more accurately.
-#Reducing the dimensionality with PCA can help mitigate overfitting and improve the model's generalization to new data. It allows the model to focus on the most relevant patterns in the data, which can result in better performance on unseen samples.
+
+# Reducing the dimensionality with PCA can help mitigate overfitting and improve the model's generalization to new data. It allows the model to focus on the most relevant patterns in the data, which can result in better performance on unseen samples.
 
 # Q3.4 
 
 The result of the general linear regression also has higher accuracy, precision, and recall in both applying the data directly and applying the methods to the PCs. 
+
 #
 
 # Q3.5 (working on this)
