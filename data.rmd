@@ -126,6 +126,7 @@ for (i in 1:num_runs) {
   accuracy <- (TP + TN) / (TP + TN + FP + FN)
   
   accuracy_results[i] <- accuracy
+  cat("Accuracy Across Run", i, ": ", accuracy_results[i], "\n")
 }
 
 mean_accuracy <- mean(accuracy_results)
@@ -160,13 +161,16 @@ for (i in 1:num_runs){
   accuracy <- (TP + TN) / (TP + TN + FP + FN)
   
   accuracy_results[i] <- accuracy
+   cat("Accuracy Across Run", i, ": ", accuracy_results[i], "\n")
 }
 
-cat("Accuracy with the Top 5 PCs: ", accuracy, "\n")
+mean_accuracy <- mean(accuracy_results)
+
+cat("Accuracy Across 10 Runs with the Top 5 PCs: ", mean_accuracy, "\n")
 
 ```
 # 2.4
-The mean accuracy in Q2.3 (PCA with top 5 PCs) is slightly better than that in Q2.2 (original features). Why?????
+The mean accuracy is very similar between the kmeans analysis on the original data and the kmeans analysis on the top 5 PCs because of the effective PCA dimensionality reduction, which retains essential clustering information. This shows that dimensionality reduction via PCA did not significantly hinder the clustering task, resulting in comparable clustering performance between two approaches. Multiple initialization runs (running kmeans clustering 10 times) also contribute to this similarity. 
 
 ## Question 3
 
@@ -282,7 +286,6 @@ glmTop5.fit <-  glm(diagnosis ~ PC1 + PC2 + PC3 + PC4 + PC5, data = top5PC_data_
 
 glmTop5.probs <-  predict(glmTop5.fit, top5PC_data_train, type = "response")
 
-
 glmTop5.pred <-  ifelse(glmTop5.probs > 0.5, 1, 0)
 
 conf_matrix_top5_pcs <- table(glmTop5.pred, top5PC_data_train$diagnosis)
@@ -304,9 +307,10 @@ cat("Performance on Train Set with Top 5 PCs:\n")
 cat("Accuracy: ", accuracy_top5_pcs, "\n")
 cat("Precision: ", precision_top5_pcs, "\n")
 cat("Recall: ", recall_top5_pcs, "\n")
-
 ```
-Apply the same PCA to test data
+
+Apply the same PCA to test data 
+Building logistical classifier and fit with the top 5 PCs
 ```{r}
 pca_test_result <- predict(pca_train_result, newdata = test_datasubset)
 
@@ -339,8 +343,6 @@ cat("Performance on Test Set with Top 5 PCs:\n")
 cat("Accuracy: ", accuracy_top5_pcs, "\n")
 cat("Precision: ", precision_top5_pcs, "\n")
 cat("Recall: ", recall_top5_pcs, "\n")
-
-
 ```
 # Q3.3 
 
