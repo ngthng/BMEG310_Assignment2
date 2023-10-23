@@ -1,9 +1,11 @@
 
 ---
-title: "assignment2"
-author: "Theo-60985751"
+title: "Assignment2"
+author: "Theo Nguyen-609857514"
 date: "2023-10-12"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ## Loading the data
@@ -73,6 +75,7 @@ pca_data <- pca_result$x
 
 boxplot(pca_data, main = "Distribution of PCs", xlab = "PC", ylab = "Score")
 ```
+
 
 ## Question 2
 
@@ -171,6 +174,7 @@ cat("Accuracy Across 10 Runs with the Top 5 PCs: ", mean_accuracy, "\n")
 ```
 # 2.4
 The mean accuracy is very similar between the kmeans analysis on the original data and the kmeans analysis on the top 5 PCs because of the effective PCA dimensionality reduction, which retains essential clustering information. This shows that dimensionality reduction via PCA did not significantly hinder the clustering task, resulting in comparable clustering performance between two approaches. Multiple initialization runs (running kmeans clustering 10 times) also contribute to this similarity. 
+
 
 ## Question 3
 
@@ -314,6 +318,10 @@ Apply the same PCA to test data
 Building logistical classifier and fit with the top 5 PCs
 
 ```{r}
+top5PC_data_test <-  as.data.frame(pca_test_result[, 1:5])
+
+top5PC_data_test$diagnosis <- test_datasubset$diagnosis
+
 glmTop5_test_probs <- predict(glmTop5.fit, top5PC_data_test, type = "response")
 
 glmTop5_test_pred <- ifelse(glmTop5_test_probs > 0.5, 1, 0)
@@ -339,15 +347,12 @@ cat("Precision: ", precision_top5_pcs, "\n")
 cat("Recall: ", recall_top5_pcs, "\n")
 ```
 # 3.3 
-
 The result of applying the regression test on the PCA data has higher accuracy, precision, and recall than that of applying the regression test on the test data only. This is likely due to the dimensionality reduction by PCA. By representing the data in a reduced-dimensional space, PCA makes the difference between each characteristic more clear in each of their own dimension so that the regression model can fit the line in each of those dimensions more accurately.
 
 # 3.4 
-
 The general linear regression (classification method) yields better results because it has higher accuracy, precision, and recall for both the original data and the data transformed using PCA. 
 
 # 3.5
-
 ```{r}
 library(ROCR)
 
