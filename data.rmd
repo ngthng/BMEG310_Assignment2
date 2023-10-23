@@ -134,7 +134,7 @@ mean_accuracy <- mean(accuracy_results)
 cat("Mean Accuracy Across 10 Runs: ", mean_accuracy, "\n")
 
 ```
-The mean accuracy is different from one run to another due to the sensitivity of kmeans clustering to the initial placement of cluster centroids. In kmeans clustering, cluster centroids are initialized randomly which means that the initial positions of centroids may vary in different runs of the algorithm. These initial positions have a significant impact on how data points are assigned to clusters. Therefore, the assignment of data points to the "B" or "M" cluster can vary between runs (see Q2.1: predicted "B" and "M" are changing/alternating each run)
+The mean accuracy is different from one run to another due to the sensitivity of kmeans clustering to the initial placement of cluster centroids. In kmeans clustering, cluster centroids are initialized randomly which means that the initial positions of centroids may vary in different runs of the algorithm. These initial positions have a significant impact on how data points are assigned to clusters. Therefore, the assignment of data points to the "B" or "M" cluster can vary between runs (see Q2.1: predicted "B" and "M" are changing/alternating between 371 and 14 each run)
 
 # 2.3
 ```{r}
@@ -170,7 +170,7 @@ cat("Accuracy Across 10 Runs with the Top 5 PCs: ", mean_accuracy, "\n")
 
 ```
 # 2.4
-The mean accuracy is very similar between the kmeans analysis on the original data and the kmeans analysis on the top 5 PCs because of the effective PCA dimensionality reduction, which retains essential clustering information. This shows that dimensionality reduction via PCA did not significantly hinder the clustering task, resulting in comparable clustering performance between two approaches. Multiple initialization runs (running kmeans clustering 10 times) also contribute to this similarity. 
+The mean accuracy is very similar between the kmeans analysis on the original data and the kmeans analysis on the top 5 PCs because of the effective PCA dimensionality reduction, which still retains essential clustering information. This shows that dimensionality reduction via PCA did not significantly hinder the clustering task, resulting in comparable clustering performance between two approaches. Multiple initialization runs (running kmeans clustering 10 times) also help contribute to this similarity. 
 
 ## Question 3
 
@@ -181,7 +181,6 @@ ovarian.dataset.train <- ovarian.dataset[sample(nrow(ovarian.dataset))[1:(nrow(o
 ovarian.dataset.test <- ovarian.dataset[sample(nrow(ovarian.dataset))[(nrow(ovarian.dataset)/2):(nrow(ovarian.dataset))],]
   
 ```
-
 
 Converting the labels into 1 and 0
 
@@ -348,9 +347,13 @@ cat("Recall: ", recall_top5_pcs, "\n")
 
 The result of applying the regression test on the PCA data has higher accuracy, precision, and recall than that of applying the regression test on the test data only. This may because PCA makes the difference between each characteristic more clear in each of their own dimension so that the regression model can fit the line in each of those dimensions more accurately.
 
+# Reducing the dimensionality with PCA can help mitigate overfitting and improve the model's generalization to new data. It allows the model to focus on the most relevant patterns in the data, which can result in better performance on unseen samples.
+
 # Q3.4 
 
 The result of the general linear regression also has higher accuracy, precision, and recall in both applying the data directly and applying the methods to the PCs. 
+
+#
 
 # Q3.5 (working on this)
 
