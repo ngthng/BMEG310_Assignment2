@@ -363,4 +363,3 @@ predict <- prediction(pred.prob, ovarian.dataset$diagnosis, label.ordering=c("B"
 perform <- performance(predict,"tpr","fpr")
 plot(perform,colorize=TRUE)
 ```
-
