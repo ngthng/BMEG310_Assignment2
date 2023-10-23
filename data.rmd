@@ -1,6 +1,6 @@
 ---
 title: "Assignment2"
-author: "Theo Nguyen-609857514, Jingxuan Chen-85741635, Hannah Yeung-"
+author: "Theo Nguyen-609857514, Jingxuan Chen-85741635, Hannah Yeung-88788427"
 date: "2023-10-12"
 output:
   pdf_document: default
@@ -279,8 +279,6 @@ summary(pca_train_result)
 top5PC_data_train <-  as.data.frame(pca_train_result$x[, 1:5])
 
 top5PC_data_train$diagnosis <- train_datasubset$diagnosis
-
-top5PC_data_train
 ```
 
 Building logistical classifier and fit with the top 5 PCs (train data set):
@@ -317,9 +315,9 @@ Apply the same PCA to test data
 Building logistical classifier and fit with the top 5 PCs
 
 ```{r}
-pca_test_result <-  prcomp(test_datasubset, center = TRUE, scale. = TRUE)
+pca_test_result <-  predict(pca_train_result,test_datasubset)
 
-top5PC_data_test <-  as.data.frame(pca_test_result$x[, 1:5])
+top5PC_data_test <-  as.data.frame(pca_test_result[, 1:5])
 
 top5PC_data_test$diagnosis <- test_datasubset$diagnosis
 
@@ -459,7 +457,7 @@ precision_DT_PC <- TP_DT_PC / (TP_DT_PC + FP_DT_PC)
 
 recall_DT_PC <- TP_DT_PC / (TP_DT_PC + FN_DT_PC)
 
-cat("Performance on Train Set with Top 5 PCs:\n")
+cat("Performance of Decision tree on Train Set with Top 5 PCs:\n")
 cat("Accuracy: ", accuracy_DT_PC, "\n")
 cat("Precision: ", precision_DT_PC, "\n")
 cat("Recall: ", recall_DT_PC, "\n")
