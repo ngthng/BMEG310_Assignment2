@@ -453,3 +453,5 @@ perform_DT <- performance(predict_DT,"tpr","fpr")
 plot(perform_DT,colorize=TRUE)
 ```
 The model has no discrimination capacity and the rate betweet TPR and FPR are the same (resulting in a srtaight ROC curve)
+
+test
