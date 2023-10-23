@@ -264,7 +264,7 @@ cat("Recall for train set: ", recall, "\n")
 ```
 The classifier performs better on the training set with a high accuracy (1) because the model was trained on this data, and it "memorizes" the training samples. On the other hand, the accuracy of the classifier on the test set is lower (0.98) because the test set contains data that the model has not seen during training, and the model may not perform as well on unseen data. Precision and recall on the training set are also high, which means that the model is good at classifying the training samples. 
 
-# Q3.2
+# 3.2
 
 Applying PCA on the train data set
 
@@ -281,6 +281,7 @@ top5PC_data_train
 ```
 
 Building logistical classifier and fit with the top 5 PCs (train data set):
+
 ```{r}
 glmTop5.fit <-  glm(diagnosis ~ PC1 + PC2 + PC3 + PC4 + PC5, data = top5PC_data_train, family = binomial)
 
@@ -311,16 +312,9 @@ cat("Recall: ", recall_top5_pcs, "\n")
 
 Apply the same PCA to test data 
 Building logistical classifier and fit with the top 5 PCs
+
 ```{r}
-pca_test_result <- predict(pca_train_result, newdata = test_datasubset)
-
-top5PC_data_test <- as.data.frame(pca_test_result[, 1:5])
-
-top5PC_data_test$diagnosis <- test_datasubset$diagnosis
-
-glmTop5_test_fit <- glm(diagnosis ~ PC1 + PC2 + PC3 + PC4 + PC5, data = top5PC_data_test, family = binomial)
-
-glmTop5_test_probs <- predict(glmTop5_test_fit, top5PC_data_test, type = "response")
+glmTop5_test_probs <- predict(glmTop5.fit, top5PC_data_test, type = "response")
 
 glmTop5_test_pred <- ifelse(glmTop5_test_probs > 0.5, 1, 0)
 
@@ -344,19 +338,15 @@ cat("Accuracy: ", accuracy_top5_pcs, "\n")
 cat("Precision: ", precision_top5_pcs, "\n")
 cat("Recall: ", recall_top5_pcs, "\n")
 ```
-# Q3.3 
+# 3.3 
 
-The result of applying the regression test on the PCA data has higher accuracy, precision, and recall than that of applying the regression test on the test data only. This may because PCA makes the difference between each characteristic more clear in each of their own dimension so that the regression model can fit the line in each of those dimensions more accurately.
+The result of applying the regression test on the PCA data has higher accuracy, precision, and recall than that of applying the regression test on the test data only. This is likely due to the dimensionality reduction by PCA. By representing the data in a reduced-dimensional space, PCA makes the difference between each characteristic more clear in each of their own dimension so that the regression model can fit the line in each of those dimensions more accurately.
 
-# Q3.4 
+# 3.4 
 
-The result of the general linear regression also has higher accuracy, precision, and recall in both applying the data directly and applying the methods to the PCs. 
+The general linear regression (classification method) yields better results because it has higher accuracy, precision, and recall for both the original data and the data transformed using PCA. 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 26aea377513c08e50d9352c7d66ec9440945536d
-# Q3.5 (working on this)
+# 3.5
 
 ```{r}
 library(ROCR)
@@ -366,18 +356,20 @@ predict <- prediction(pred.prob, ovarian.dataset$diagnosis, label.ordering=c("B"
 perform <- performance(predict,"tpr","fpr")
 plot(perform,colorize=TRUE)
 ```
-Looking at the ROC curve, there is little overlap between the two classes of TPR and FPR. The model's separability is high and performs well in separating the positive and negative classes. The ROC curve can give use a visualization of the trade of between the sensitivity/specifity of a model.
+Looking at the ROC curve, there is little overlap between the two classes of TPR and FPR. The model's separability is high and performs well in separating the positive and negative classes. The ROC curve can give us a visualization of the trade-offs between the sensitivity/specificity of a model, allowing us to assess the model's performance at different decision boundaries.
 
-# Q3.6
+# 3.6
 
 Use decision tree as the extra classifier:
 
 ```{r}
 # remember to install "rpart" packages
+
 library(tidymodels)
 library(rpart)
 
 # scaling the datasets
+
 train_datasubset_scaled = scale(train_datasubset)
 test_datasubset_scaled = scale(test_datasubset)
 
@@ -385,12 +377,36 @@ test_datasubset_scaled = scale(test_datasubset)
 
 train_datasubset_scaled_df = as.data.frame(train_datasubset_scaled)
 test_datasubset_scaled_df = as.data.frame(test_datasubset_scaled)
-# training the model
 
+# training the model on the training set
 
 model_DT.fit = rpart(diagnosis ~ ., data = train_datasubset_scaled_df, method = 'anova')
 
 # making predictions using the model
+
+model_DT.probs = predict(model_DT.fit, newdata = train_datasubset_scaled_df, type = 'matrix')
+model_DT.pred = ifelse(model_DT.probs > 0.5, 1, 0)
+
+confusion_matrix_DT = table(model_DT.pred, train_datasubset_scaled_df$diagnosis)
+confusion_matrix_DT
+
+TP_DT <- confusion_matrix_DT[2, 2]
+TN_DT <- confusion_matrix_DT[1, 1]
+FP_DT <- confusion_matrix_DT[2, 1]
+FN_DT <- confusion_matrix_DT[1, 2]
+
+accuracy_DT <- (TP_DT + TN_DT) / sum(confusion_matrix_DT)
+
+precision_DT <- TP_DT / (TP_DT + FP_DT)
+
+recall_DT <- TP_DT / (TP_DT + FN_DT)
+
+cat("Performance on Train Set directly onto the data:\n")
+cat("Accuracy: ", accuracy_DT, "\n")
+cat("Precision: ", precision_DT, "\n")
+cat("Recall: ", recall_DT, "\n")
+```
+```{r}
 model_DT.probs = predict(model_DT.fit, newdata = test_datasubset_scaled_df, type = 'matrix')
 model_DT.pred = ifelse(model_DT.probs > 0.5, 1, 0)
 
@@ -408,19 +424,42 @@ precision_DT <- TP_DT / (TP_DT + FP_DT)
 
 recall_DT <- TP_DT / (TP_DT + FN_DT)
 
-cat("Performance on Test Set directly onto the data PCs:\n")
+cat("Performance on Test Set directly onto the data:\n")
 cat("Accuracy: ", accuracy_DT, "\n")
 cat("Precision: ", precision_DT, "\n")
 cat("Recall: ", recall_DT, "\n")
-
-
 ```
+The accuracy, precision, and recall of the train set are higher than the test set.
+
+
 Applying the decision tree classifier on the PC of the data
-
 ```{r}
-
 model_DT_PC.fit = rpart(diagnosis ~ PC1 + PC2 + PC3 + PC4 + PC5, data = top5PC_data_train, method = 'anova')
 
+model_DT_PC.probs = predict(model_DT_PC.fit, newdata = top5PC_data_train, type = 'matrix')
+model_DT_PC.pred = ifelse(model_DT_PC.probs > 0.5, 1, 0)
+
+confusion_matrix_DT_PC = table(model_DT_PC.pred, top5PC_data_train$diagnosis)
+confusion_matrix_DT_PC
+
+TP_DT_PC <- confusion_matrix_DT_PC[2, 2]
+TN_DT_PC <- confusion_matrix_DT_PC[1, 1]
+FP_DT_PC <- confusion_matrix_DT_PC[2, 1]
+FN_DT_PC <- confusion_matrix_DT_PC[1, 2]
+
+accuracy_DT_PC <- (TP_DT_PC + TN_DT_PC) / sum(confusion_matrix_DT_PC)
+
+precision_DT_PC <- TP_DT_PC / (TP_DT_PC + FP_DT_PC)
+
+recall_DT_PC <- TP_DT_PC / (TP_DT_PC + FN_DT_PC)
+
+cat("Performance on Train Set with Top 5 PCs:\n")
+cat("Accuracy: ", accuracy_DT_PC, "\n")
+cat("Precision: ", precision_DT_PC, "\n")
+cat("Recall: ", recall_DT_PC, "\n")
+```
+
+```{r}
 model_DT_PC.probs = predict(model_DT_PC.fit, newdata = top5PC_data_test, type = 'matrix')
 model_DT_PC.pred = ifelse(model_DT_PC.probs > 0.5, 1, 0)
 
@@ -444,10 +483,10 @@ cat("Precision: ", precision_DT_PC, "\n")
 cat("Recall: ", recall_DT_PC, "\n")
 
 ```
-All of accuracy, precison, and recall improved compared to just applying the classifier directly onto the data.
+All of accuracy, precision, and recall  improved compared to just applying the classifier directly onto the data.
+
 
 Generating a ROC curve
-
 ```{r}
 library(ROCR)
 
@@ -456,6 +495,4 @@ predict_DT <- prediction(pred_DT.prob, ovarian.dataset$diagnosis, label.ordering
 perform_DT <- performance(predict_DT,"tpr","fpr")
 plot(perform_DT,colorize=TRUE)
 ```
-The model has no discrimination capacity and the rate betweet TPR and FPR are the same (resulting in a srtaight ROC curve)
-
-test
+The model has no discrimination capacity and the rate between TPR and FPR are the same (resulting in a straight ROC curve)
