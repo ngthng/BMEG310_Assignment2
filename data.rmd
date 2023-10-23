@@ -1,7 +1,7 @@
 
 ---
 title: "Assignment2"
-author: "Theo Nguyen-609857514"
+author: "Theo Nguyen-609857514, Jingxuan Chen-85741635, Hannah Yeung-"
 date: "2023-10-12"
 output:
   pdf_document: default
@@ -318,7 +318,9 @@ Apply the same PCA to test data
 Building logistical classifier and fit with the top 5 PCs
 
 ```{r}
-top5PC_data_test <-  as.data.frame(pca_test_result[, 1:5])
+pca_test_result <-  prcomp(test_datasubset, center = TRUE, scale. = TRUE)
+
+top5PC_data_test <-  as.data.frame(pca_test_result$x[, 1:5])
 
 top5PC_data_test$diagnosis <- test_datasubset$diagnosis
 
@@ -406,7 +408,7 @@ precision_DT <- TP_DT / (TP_DT + FP_DT)
 
 recall_DT <- TP_DT / (TP_DT + FN_DT)
 
-cat("Performance on Train Set directly onto the data:\n")
+cat("Performance on Decision Tree train set directly onto the data:\n")
 cat("Accuracy: ", accuracy_DT, "\n")
 cat("Precision: ", precision_DT, "\n")
 cat("Recall: ", recall_DT, "\n")
@@ -429,7 +431,7 @@ precision_DT <- TP_DT / (TP_DT + FP_DT)
 
 recall_DT <- TP_DT / (TP_DT + FN_DT)
 
-cat("Performance on Test Set directly onto the data:\n")
+cat("Performance on Decision Tree test Set directly onto the data:\n")
 cat("Accuracy: ", accuracy_DT, "\n")
 cat("Precision: ", precision_DT, "\n")
 cat("Recall: ", recall_DT, "\n")
@@ -488,7 +490,7 @@ cat("Precision: ", precision_DT_PC, "\n")
 cat("Recall: ", recall_DT_PC, "\n")
 
 ```
-All of accuracy, precision, and recall  improved compared to just applying the classifier directly onto the data.
+All of accuracy, precision, and recall improved compared to just applying the classifier directly onto the data.
 
 
 Generating a ROC curve
