@@ -354,7 +354,6 @@ The result of applying the regression test on the PCA data has higher accuracy, 
 
 The result of the general linear regression also has higher accuracy, precision, and recall in both applying the data directly and applying the methods to the PCs. 
 
-#
 
 # Q3.5 (working on this)
 
